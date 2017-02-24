@@ -9,4 +9,9 @@
             <a href="{{url_for('logout')}}">Logout</a>
         {% endif %}
     </ul>
+
+    <div>
+        <li><a href="{{url_for('upload_form')}}">File Upload</a></li>
+        <li><a href="{{url_for('image_form')}}">Image Transform</a></li>
+    </div>
 {% endblock %}
