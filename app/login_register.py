@@ -119,4 +119,4 @@ def register():
         cursor.execute(query, (username, password))
         cnx.commit()
 
-        return redirect(url_for('index'))
+        return redirect(url_for('login'), code=307)
