@@ -5,17 +5,18 @@ import tempfile
 import os
 
 
-@app.route('/test/FileUpload/form',methods=['GET'])
-#Return file upload form
+@app.route('/test/FileUpload/form', methods=['GET'])
+# Return file upload form
 def upload_form():
-    return render_template("fileupload/form.html")
+    return render_template("fileupload/form.html",
+                           page_header = "File Upload")
 
 
-@app.route('/test/FileUpload',methods=['POST'])
-#Upload a new file and store in the systems temp directory
+@app.route('/test/FileUpload', methods=['POST'])
+# Upload a new file and store in the systems temp directory
 def file_upload():
     userid = request.form.get("userID")
-    passowrd = request.form.get("password")
+    password = request.form.get("password")
 
     # check if the post request has the file part
     if 'uploadedfile' not in request.files:
@@ -30,8 +31,6 @@ def file_upload():
 
     tempdir = tempfile.gettempdir()
 
-    new_file.save(os.path.join(tempdir,new_file.filename))
+    new_file.save(os.path.join(tempdir, new_file.filename))
 
     return "Success"
-
-

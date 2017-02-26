@@ -2,33 +2,9 @@ from app import app
 
 from flask import request, render_template, redirect, url_for, session, g
 import mysql.connector
-from app.dbconfig import db_config
+from app.db import get_db
 
 app.secret_key = '\t\x9e\xcc\\\xbf\x99U{"\xe5p\xb4\x18\xb7N\xb8%q\xaa\xe5\xd4\x84\xbb\xe8'
-
-
-# connect to database
-def connect_to_database():
-    return mysql.connector.connect(user=db_config['user'],
-                                   password=db_config['password'],
-                                   host=db_config['host'],
-                                   database=db_config['database']
-                                   )
-
-
-# get singleton database connection
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = connect_to_database()
-    return db
-
-
-@app.teardown_appcontext
-def teardown_db(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -40,7 +16,7 @@ def login():
     else:
         # if method=GET take user to login page
         if request.method == 'GET':
-            return render_template('login.html',
+            return render_template('login/login.html',
                                    page_header="Login")
         # if method=POST log the user in
         elif request.method == 'POST':
@@ -66,7 +42,7 @@ def login():
 
             # if user doesn't exist, return an error message and reload login page
             if first_row is None:
-                return render_template('login.html',
+                return render_template('login/login.html',
                                        page_header="Login",
                                        error_msg="No such username",
                                        username=request.form.get('username'))
@@ -79,7 +55,7 @@ def login():
                 return redirect(url_for('index'))
             # if password doesn't match, return an error message and reload login page
             else:
-                return render_template('login.html',
+                return render_template('login/login.html',
                                        page_header="Login",
                                        error_msg="Wrong password",
                                        username=request.form.get('username'))
@@ -98,7 +74,7 @@ def logout():
 def register():
     # if method=GET take user to login page
     if request.method == 'GET':
-        return render_template('register.html',
+        return render_template('login/register.html',
                                page_header="Register")
     # if method=POST create a new username and password row in the users table
     elif request.method == 'POST':
@@ -108,11 +84,20 @@ def register():
         # do validation on page
 
         # check if user already exists
-        # todo
-
-        # if all good, insert new user into users table
         cnx = get_db()
         cursor = cnx.cursor()
+        query = '''
+                SELECT login FROM users
+                WHERE login = %s
+                '''
+        cursor.execute(query, (username,))
+        if cursor.fetchone() is not None:
+            return render_template('login/register.html',
+                                   page_header="Login",
+                                   error_msg="Username already exits",
+                                   username=request.form.get('username'))
+
+        # if all good, insert new user into users table
         query = '''
                 INSERT INTO users(login, password)
                 VALUES (%s,%s)'''

@@ -2,7 +2,7 @@
 {% block content %}
     {%  if error_msg %}
         <div>
-            <b>Invalid Login! Try again.</b>
+            <b>{{ error_msg }}</b>
         </div>
     {%  endif %}
     <form method="post" action={{ url_for("register") }}>
