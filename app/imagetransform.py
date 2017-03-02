@@ -76,11 +76,12 @@ def image_transform():
                    os.path.basename(fname_negative))
 
     # save s3 keys to images database
+    #todo
 
     # delete local copies of image
     #todo
 
-    # temporarty
+    # temporarily redirect to page showing image, but should redirect to landing page
     #todo redirect to "show my images" page
     return render_template("imagetransform/view.html",
                            f1=fname[4:],
