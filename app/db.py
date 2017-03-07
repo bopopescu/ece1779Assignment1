@@ -1,10 +1,11 @@
 from app import app
 from flask import g
+import sys
 import mysql.connector
 
 db_config = {'user': 'ece1779A1admin',
              'password': 'ece1779pass',
-             'host': 'ec2-52-200-73-7.compute-1.amazonaws.com',
+             'host': str(sys.argv[1]),
              'database': 'ece1779a1'
              }
 
