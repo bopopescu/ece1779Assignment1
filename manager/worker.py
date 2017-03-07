@@ -14,7 +14,7 @@ def create_ec2_worker(sql_host):
     userdata = '''#cloud-config
     runcmd:
      - cd ~/Documents/ece1779/ece1779Assignment1
-     - ./venv/bin/python ece1779Assignment1.py {}
+     - ./venv_linux/bin/python ece1779Assignment1.py {}
     '''.format(sql_host)
     return ec2_db_instance.create_instances(ImageId=ami_id,
                                     InstanceType=instance_type,
