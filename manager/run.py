@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     db_instances = db.create_ec2_database()
     sql_host = db_instances[0].public_dns_name
-
+    print(sql_host)
     # create first worker instance
     worker.create_ec2_worker(sql_host=sql_host)
 
