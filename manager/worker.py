@@ -1,6 +1,6 @@
 import boto3
 
-ami_id = 'ami-050cad13'
+ami_id = 'ami-af3c9cb9'
 instance_type = 't2.micro'
 key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
@@ -12,7 +12,7 @@ def create_ec2_worker(sql_host):
     # run app on ec2 instance passing in mySQL server hostname as argument
     userdata = f'''#cloud-config
     runcmd:
-     - cp -r /home/ubuntu/.aws ~
+     - su ubuntu
      - cd /home/ubuntu/Desktop/ece1779/ece1779Assignment1
      - ./venv_linux/bin/python ece1779Assignment1.py {sql_host}
     '''
