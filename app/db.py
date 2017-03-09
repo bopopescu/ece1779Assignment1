@@ -9,6 +9,7 @@ db_config = {'user': 'ece1779A1admin',
              'database': 'ece1779a1'
              }
 
+
 # connect to database
 def connect_to_database():
     return mysql.connector.connect(user=db_config['user'],

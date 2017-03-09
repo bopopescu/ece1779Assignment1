@@ -1,3 +1,3 @@
 from manager import db
 from manager import worker
-from manager import loadbalancer_config
+from manager import loadbalancer
