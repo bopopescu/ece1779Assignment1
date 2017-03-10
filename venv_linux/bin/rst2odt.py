@@ -1,4 +1,4 @@
-#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python
+#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python3
 
 # $Id: rst2odt.py 5839 2009-01-07 19:09:28Z dkuhlman $
 # Author: Dave Kuhlman <dkuhlman@rexx.com>

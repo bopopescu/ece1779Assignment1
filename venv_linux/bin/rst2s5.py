@@ -1,4 +1,4 @@
-#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python
+#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python3
 
 # $Id: rst2s5.py 4564 2006-05-21 20:44:42Z wiemann $
 # Author: Chris Liechti <cliechti@gmx.net>

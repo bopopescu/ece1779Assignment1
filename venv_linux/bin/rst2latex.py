@@ -1,4 +1,4 @@
-#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python
+#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python3
 
 # $Id: rst2latex.py 5905 2009-04-16 12:04:49Z milde $
 # Author: David Goodger <goodger@python.org>

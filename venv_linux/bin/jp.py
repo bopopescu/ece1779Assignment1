@@ -1,4 +1,4 @@
-#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python
+#!/home/ubuntu/Desktop/ece1779/ece1779Assignment1/venv_linux/bin/python3
 
 import sys
 import json
