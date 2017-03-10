@@ -1,6 +1,6 @@
 import boto3
 
-ami_id = 'ami-af3c9cb9'
+ami_id = 'ami-b6e340a0'
 instance_type = 't2.micro'
 key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
@@ -17,11 +17,11 @@ def create_ec2_worker(sql_host):
      - ./venv_linux/bin/python ece1779Assignment1.py {sql_host}
     '''
     return ec2_db_instances.create_instances(ImageId=ami_id,
-                                            InstanceType=instance_type,
-                                            MinCount=1,
-                                            MaxCount=1,
-                                            KeyName=key_name,
-                                            UserData=userdata,
-                                            SecurityGroupIds=security_group,
-                                            Monitoring={'Enabled': True}
-                                            )
+                                             InstanceType=instance_type,
+                                             MinCount=1,
+                                             MaxCount=1,
+                                             KeyName=key_name,
+                                             UserData=userdata,
+                                             SecurityGroupIds=security_group,
+                                             Monitoring={'Enabled': True}
+                                             )

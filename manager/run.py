@@ -31,14 +31,14 @@ if __name__ == '__main__':
     loadbalancer.create_loadbalancer()
     elb_description = elb.describe_load_balancers(LoadBalancerNames=[loadbalancer.elb_name])
     loadbalancer_host = elb_description.get('LoadBalancerDescriptions')[0].get('DNSName')
-    print('load balancer up and running on: ' + loadbalancer_host)
+    print('load balancer up and running on: ' + loadbalancer_host + ':5000')
 
     # regester first worker instance with load balancer
     elb.register_instances_with_load_balancer(LoadBalancerName=loadbalancer.elb_name,
                                               Instances=[{
                                                   'InstanceId': worker1_instance.id
                                               }]
-    )
+                                              )
 
     # wait for user to type 'stop'
     user_cmd = input("type 'stop' to end manager: ")
