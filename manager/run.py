@@ -24,7 +24,7 @@ if __name__ == '__main__':
     while list(ec2.instances.filter(InstanceIds=[worker1_instance.id]))[0].state.get('Name') != 'running':
         time.sleep(0.1)
     worker_host = list(ec2.instances.filter(InstanceIds=[worker1_instance.id]))[0].public_dns_name
-    print('worker up and running on: ' + worker_host)
+    print('worker up and running on: ' + worker_host + ':5000')
 
     # create load balancer
     elb = boto3.client('elb')
@@ -38,7 +38,7 @@ if __name__ == '__main__':
                                               Instances=[{
                                                   'InstanceId': worker1_instance.id
                                               }]
-    )
+                                              )
 
     # wait for user to type 'stop'
     user_cmd = input("type 'stop' to end manager: ")
