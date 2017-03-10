@@ -12,7 +12,6 @@ def create_ec2_worker(sql_host):
     # run app on ec2 instance passing in mySQL server hostname as argument
     userdata = f'''#cloud-config
     runcmd:
-     - su ubuntu
      - cd /home/ubuntu/Desktop/ece1779/ece1779Assignment1
      - ./venv_linux/bin/python ece1779Assignment1.py {sql_host}
     '''

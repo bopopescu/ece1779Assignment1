@@ -24,14 +24,14 @@ if __name__ == '__main__':
     while list(ec2.instances.filter(InstanceIds=[worker1_instance.id]))[0].state.get('Name') != 'running':
         time.sleep(0.1)
     worker_host = list(ec2.instances.filter(InstanceIds=[worker1_instance.id]))[0].public_dns_name
-    print('worker up and running on: ' + worker_host)
+    print('worker up and running on: ' + worker_host + ':5000')
 
     # create load balancer
     elb = boto3.client('elb')
     loadbalancer.create_loadbalancer()
     elb_description = elb.describe_load_balancers(LoadBalancerNames=[loadbalancer.elb_name])
     loadbalancer_host = elb_description.get('LoadBalancerDescriptions')[0].get('DNSName')
-    print('load balancer up and running on: ' + loadbalancer_host + ':5000')
+    print('load balancer up and running on: ' + loadbalancer_host)
 
     # regester first worker instance with load balancer
     elb.register_instances_with_load_balancer(LoadBalancerName=loadbalancer.elb_name,
