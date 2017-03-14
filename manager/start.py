@@ -14,13 +14,13 @@ def start():
     ec2 = boto3.resource('ec2')
 
     # create database server
-    db_instance = db.create_ec2_database()[0]
+#    db_instance = db.create_ec2_database()[0]
     # wait for db server instance to be running so we're sure we can get the public dns
-    time.sleep(1)
-    while list(ec2.instances.filter(InstanceIds=[db_instance.id]))[0].state.get('Name') != 'running':
-        time.sleep(0.1)
-    sql_host = list(ec2.instances.filter(InstanceIds=[db_instance.id]))[0].public_dns_name
-    print('sql server up and running on: ' + sql_host)
+#    time.sleep(1)
+#    while list(ec2.instances.filter(InstanceIds=[db_instance.id]))[0].state.get('Name') != 'running':
+#    time.sleep(0.1)
+    sql_host = db.db_config.get('host')
+
 
     # create first worker instance, passing in the name of the db server hostname
     worker1_instance = worker.create_ec2_worker(sql_host=sql_host)[0]
@@ -44,4 +44,14 @@ def start():
                                               }]
                                               )
 
+    return render_template("admin/start.html",
+                           page_header="Start complete",
+                           sql_host=sql_host,
+                           worker1_host=worker_host + ':5000',
+                           loadbalancer_host=loadbalancer_host
+                           )
+
+@app.route('/start_sql')
+def start_sql():
+    db.create_ec2_database()
     return redirect(url_for('index'))

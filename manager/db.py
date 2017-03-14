@@ -1,5 +1,6 @@
 from manager import app, db
 
+import time
 import boto3
 from flask import g
 import sys
@@ -13,21 +14,27 @@ security_group = ['sg-f23cc98d', ]
 
 db_config = {'user': 'ece1779A1admin',
              'password': 'ece1779pass',
-             'host': 'ec2-54-197-212-10.compute-1.amazonaws.com',
+             'host': '',
              'database': 'ece1779a1'
              }
 
 
 def create_ec2_database():
     ec2_db_instances = boto3.resource('ec2')
-    return ec2_db_instances.create_instances(ImageId=ami_id,
-                                             InstanceType=instance_type,
-                                             MinCount=1,
-                                             MaxCount=1,
-                                             KeyName=key_name,
-                                             SecurityGroupIds=security_group,
-                                             Monitoring={'Enabled': True}
-                                             )
+    db_instance = ec2_db_instances.create_instances(ImageId=ami_id,
+                                                    InstanceType=instance_type,
+                                                    MinCount=1,
+                                                    MaxCount=1,
+                                                    KeyName=key_name,
+                                                    SecurityGroupIds=security_group,
+                                                    Monitoring={'Enabled': True}
+                                                    )[0]
+    time.sleep(1)
+    while list(ec2_db_instances.instances.filter(InstanceIds=[db_instance.id]))[0].state.get('Name') != 'running':
+        time.sleep(0.1)
+    sql_host = list(ec2_db_instances.instances.filter(InstanceIds=[db_instance.id]))[0].public_dns_name
+    db_config.update({'host': sql_host})
+    print('sql server up and running on: ' + db.db_config['host'])
 
 
 # connect to database

@@ -2,7 +2,7 @@
 {% block content %}
     <ul>
         {% if session['username'] == Null %}
-            You are not logged in.
+            <li><a href="{{url_for('start_sql')}}">Start sql server</a></li>
         {% else %}
             <div>
                 <li><a href="{{url_for('start')}}">Start user app server</a></li>
