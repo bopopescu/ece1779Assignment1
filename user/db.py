@@ -1,4 +1,4 @@
-from app import app
+from user import app
 from flask import g
 import sys
 import mysql.connector

@@ -3,12 +3,6 @@
     <ul>
         {% if session['username'] == Null %}
             You are not logged in.
-        {% elif session['username'] == 'ece1779A1admin' %}
-            <div>
-                <li><a href="{{url_for('admin')}}">List users</a></li>
-                <li><a href="{{url_for('admin')}}">Adjust worker pools</a></li>
-                <li><a href="{{url_for('admin')}}">Delete all data</a></li>
-            </div>
         {% else %}
             <div>
                 <li><a href="{{url_for('image_form')}}">Image transform</a></li>

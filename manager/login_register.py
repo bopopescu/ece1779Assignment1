@@ -1,10 +1,10 @@
-from app import app
+from manager import app
 
 from flask import request, render_template, redirect, url_for, session, g
 import mysql.connector
-from app.db import get_db
+from manager.db import get_db
 
-app.secret_key = '\t\x9e\xcc\\\xbf\x99U{"\xe5p\xb4\x18\xb7N\xb8%q\xaa\xe5\xd4\x84\xbb\xe8'
+app.secret_key = '\x91b\x8d\xfe\x16\xf5\x15\xd0\xee\xb7ZBe\xe7\x17\xc9Cc\x1cy3\x8f\x86\x84\xc7=\x9c2\x94\xa7YE8\x05'
 
 
 @app.route('/login', methods=['GET', 'POST'])

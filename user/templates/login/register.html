@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    {%  if error_msg %}
+        <div>
+            <b>{{ error_msg }}</b>
+        </div>
+    {%  endif %}
+    <form method="post" action={{ url_for("register") }}>
+        <div>
+            <label>Please choose username:</label>
+            <input type="text" name="username" value="{{ username }}">
+        </div>
+        <div>
+            <label>Choose password:</label>
+            <input type="password" name="password">
+        </div>
+        <div>
+            <label>Please retype password:</label>
+            <input type="password" name="repeat_password">
+        </div>
+        <div>
+            <input type="submit" value="Register now!">
+        </div>
+    </form>
+
+    <form action="{{ url_for("index") }}">
+            <input type="submit" value="Back"/>
+    </form>
+{% endblock %}

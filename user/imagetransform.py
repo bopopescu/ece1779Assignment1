@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, session
-from app import app
+from user import app
 
 import tempfile
 import os
@@ -37,27 +37,27 @@ def image_transform():
     # tempdir = tempfile.gettempdir()
 
     # file is first saved and transformed locally, then it will be uploaded to S2
-    fname = os.path.join('app/static', new_file.filename)
+    fname = os.path.join('user/static', new_file.filename)
     new_file.save(fname)
     img = Image(filename=fname)
 
     # rotate the image and save
     i1 = img.clone()
     i1.rotate(180)
-    fname_rotated = os.path.join('app/static', 'rotated_' + new_file.filename)
+    fname_rotated = os.path.join('user/static', 'rotated_' + new_file.filename)
     i1.save(filename=fname_rotated)
 
 
     # equalize the image and save
     i2 = img.clone()
     i2.equalize()
-    fname_equalized = os.path.join('app/static', 'equalized_' + new_file.filename)
+    fname_equalized = os.path.join('user/static', 'equalized_' + new_file.filename)
     i2.save(filename=fname_equalized)
 
     # make a negative of the image and save
     i3 = img.clone()
     i3.negate()
-    fname_negative = os.path.join('app/static', 'negative_' + new_file.filename)
+    fname_negative = os.path.join('user/static', 'negative_' + new_file.filename)
     i3.save(filename=fname_negative)
 
     # save files to S3

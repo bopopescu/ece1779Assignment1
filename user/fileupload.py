@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request
-from app import app
+from user import app
 
 import tempfile
 import os
