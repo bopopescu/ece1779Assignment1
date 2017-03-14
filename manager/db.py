@@ -30,6 +30,15 @@ def create_ec2_database():
                                                     Monitoring={'Enabled': True}
                                                     )[0]
     time.sleep(1)
+    db_instance.create_tags(
+        Tags=[
+                {
+                    'Key': 'Role',
+                    'Value': 'sql server'
+                },
+        ]
+    )
+
     while list(ec2_db_instances.instances.filter(InstanceIds=[db_instance.id]))[0].state.get('Name') != 'running':
         time.sleep(0.1)
     sql_host = list(ec2_db_instances.instances.filter(InstanceIds=[db_instance.id]))[0].public_dns_name

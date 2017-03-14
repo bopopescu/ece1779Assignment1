@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{{ url_for('ec2_create') }}"
+          method="post">
+          <input type="submit" value="New">
+    </form>
+
+    <table>
+    <thead>
+        <th>ID</th>
+        <th>Role</th>
+        <th>Type</th>
+        <th>Availability Zone</th>
+        <th>Status</th>
+    </thead>
+    {% for instance in instances %}
+        <tr>
+            <td>{{ instance.id }}</td>
+            {% if instance.tags is not none %}
+                {% for tag in instance.tags %}
+                    {% if tag['Key'] == 'Role' %}
+                        <td>{{ tag['Value'] }}</td>
+                    {% else %}
+                        <td>None</td>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <td>None</td>
+            {% endif %}
+            <td>{{ instance.instance_type }}</td>
+            <td>{{ instance.placement['AvailabilityZone'] }}</td>
+            <td>{{ instance.state['Name'] }}</td>
+            <td>
+                <form action="{{ url_for('ec2_view', id=instance.id)}}"
+                      method="get">
+                    <input type="submit" value="Details">
+                </form>
+            </td>
+
+             <td>
+                <form action="{{ url_for('ec2_start', id=instance.id) }}"
+                      method="post"
+                      onsubmit='return confirm("Start instance {{ instance.id }}?")'>
+                    <input type="submit" value="Start">
+                </form>
+            </td>
+
+            <td>
+                <form action="{{ url_for('ec2_stop', id=instance.id) }}"
+                      method="post"
+                      onsubmit='return confirm("Stop instance {{ instance.id }}?")'>
+                    <input type="submit" value="Stop">
+                </form>
+            </td>
+
+            <td>
+                <form action="{{ url_for('ec2_destroy', id=instance.id) }}"
+                      method="post"
+                      onsubmit='return confirm("Destroy instance {{ instance.id }}?")'>
+                    <input type="submit" value="Destroy">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

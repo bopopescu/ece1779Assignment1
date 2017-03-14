@@ -9,4 +9,5 @@ from manager import index
 from manager import login_register
 from manager import start
 from manager import stop
+from manager import ec2
 from manager import admin
