@@ -18,6 +18,18 @@ db_config = {'user': 'ece1779A1admin',
              'database': 'ece1779a1'
              }
 
+# find sql server and set db_config['host'] to its dns
+ec2 = boto3.resource('ec2')
+all_ec2_instances = ec2.instances.all()
+sql_host = ''
+for instance in all_ec2_instances:
+    if instance.tags is not None:
+        for tag in instance.tags:
+            if tag['Key'] == 'Role' and tag['Value'] == 'sql server':
+                sql_host = instance.public_dns_name
+                break
+db_config.update({'host': sql_host})
+
 
 def create_ec2_database():
     ec2_db_instances = boto3.resource('ec2')

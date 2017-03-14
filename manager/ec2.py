@@ -13,9 +13,6 @@ def ec2_list():
     ec2 = boto3.resource('ec2')
     instances = ec2.instances.all()
 
-    for instance in instances:
-        print(str(instance.tags))
-
     return render_template('ec2_workers/list.html',
                            title='EC2 Instances',
                            instances=instances)
