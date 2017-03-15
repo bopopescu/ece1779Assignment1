@@ -3,7 +3,7 @@ import time
 from datetime import datetime, timedelta
 from operator import itemgetter
 
-from manager import loadbalancer
+from manager import loadbalancer, db
 
 ami_id = 'ami-b6e340a0'
 instance_type = 't2.micro'
@@ -11,7 +11,7 @@ key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
 
 
-def create_ec2_worker(sql_host, first_worker=False):
+def create_ec2_worker(sql_host=db.db_config['host'], first_worker=False):
     ec2 = boto3.resource('ec2')
 
     # run app on ec2 instance by passing in mySQL server hostname as argument

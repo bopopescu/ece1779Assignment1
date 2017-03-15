@@ -47,7 +47,6 @@ def image_transform():
     fname_rotated = os.path.join('user/static', 'rotated_' + new_file.filename)
     i1.save(filename=fname_rotated)
 
-
     # equalize the image and save
     i2 = img.clone()
     i2.equalize()
@@ -76,13 +75,13 @@ def image_transform():
                    os.path.basename(fname_negative))
 
     # save s3 keys to images database
-    #todo
+    # todo
 
     # delete local copies of image
-    #todo
+    # todo
 
     # temporarily redirect to page showing image, but should redirect to landing page
-    #todo redirect to "show my images" page
+    # todo redirect to "show my images" page
     return render_template("imagetransform/view.html",
                            f1=fname[4:],
                            f2=fname_rotated[4:],
