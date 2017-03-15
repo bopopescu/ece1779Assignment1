@@ -3,4 +3,8 @@
     <div>SQL Server hostname: {{ sql_host }}</div>
     <div>Worker 1 hostname: {{ worker1_host }}</div>
     <div>Loadbalancer hostname: {{ loadbalancer_host }}</div>
+    <form action="{{ url_for("index") }}"
+          methods='get'>
+        <input type="submit" value="Back">
+    </form>
 {% endblock %}

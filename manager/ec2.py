@@ -22,7 +22,7 @@ def ec2_list():
 def ec2_create():
 
     ec2 = boto3.resource('ec2')
-    worker.create_ec2_worker(db.db_config['host'])
+    worker.create_ec2_worker(sql_host=db.db_config['host'])
 
     return redirect(url_for('ec2_list'))
 

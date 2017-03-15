@@ -15,7 +15,9 @@ def stop():
     for instance in all_ec2_instances:
         if instance.tags is not None:
             for tag in instance.tags:
-                if tag['Key'] == 'Role' and tag['Value'] == 'worker':
+                if tag['Key'] == 'Role' \
+                        and tag['Value'] == 'worker' \
+                        and instance.state.get('Name') == 'running':
                     instance.terminate()
                     break
 

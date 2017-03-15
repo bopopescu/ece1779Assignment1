@@ -11,7 +11,7 @@ key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
 
 
-def create_ec2_worker(sql_host):
+def create_ec2_worker(sql_host, first_worker=False):
     ec2 = boto3.resource('ec2')
 
     # run app on ec2 instance by passing in mySQL server hostname as argument
@@ -32,13 +32,19 @@ def create_ec2_worker(sql_host):
                                            Monitoring={'Enabled': True}
                                            )[0]
     time.sleep(1)
+    tags = [
+        {
+            'Key': 'Role',
+            'Value': 'worker'
+        },
+    ]
+    if first_worker:
+        tags.append({
+            'Key': 'First Worker',
+            'Value': 'true'
+        })
     worker_instance.create_tags(
-        Tags=[
-            {
-                'Key': 'Role',
-                'Value': 'worker'
-            },
-        ]
+        Tags=tags
     )
 
     # regester worker instance with load balancer
@@ -69,11 +75,11 @@ def get_worker_utilization(id):
 
     cpu = client.get_metric_statistics(
         Period=1 * 60,
-        StartTime=datetime.utcnow() - timedelta(seconds=60 * 60),
+        StartTime=datetime.utcnow() - timedelta(seconds=2 * 60),  # go two minutes back
         EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
         MetricName=metric_name,
         Namespace=namespace,  # Unit='Percent',
-        Statistics=[statistic],
+        Statistics=['Average', 'Maximum', 'Minimum'],
         Dimensions=[{'Name': 'InstanceId', 'Value': id}]
     )
 
@@ -87,4 +93,4 @@ def get_worker_utilization(id):
 
     cpu_stats = sorted(cpu_stats, key=itemgetter(0))
 
-    return cpu_stats
+    return cpu

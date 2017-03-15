@@ -19,8 +19,9 @@ def start():
 
     # create first worker instance, passing in the name of the db server hostname
     sql_host = db.db_config.get('host')
-    worker1_instance = worker.create_ec2_worker(sql_host=sql_host)
+    worker1_instance = worker.create_ec2_worker(sql_host=sql_host, first_worker=True)
     # get the hostname of the worker instance
+    time.sleep(1)
     worker_host = list(ec2.instances.filter(InstanceIds=[worker1_instance.id]))[0].public_dns_name
 
     return render_template("admin/start.html",

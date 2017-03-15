@@ -5,6 +5,11 @@
           <input type="submit" value="New">
     </form>
 
+    <form action="{{ url_for("index") }}"
+          methods='get'>
+        <input type="submit" value="Back">
+    </form>
+
     <table>
     <thead>
         <th>ID</th>
@@ -20,8 +25,6 @@
                 {% for tag in instance.tags %}
                     {% if tag['Key'] == 'Role' %}
                         <td>{{ tag['Value'] }}</td>
-                    {% else %}
-                        <td>None</td>
                     {% endif %}
                 {% endfor %}
             {% else %}
