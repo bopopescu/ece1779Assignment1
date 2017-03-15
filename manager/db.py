@@ -25,7 +25,9 @@ sql_host = ''
 for instance in all_ec2_instances:
     if instance.tags is not None:
         for tag in instance.tags:
-            if tag['Key'] == 'Role' and tag['Value'] == 'sql server':
+            if tag['Key'] == 'Role' \
+                    and tag['Value'] == 'sql server' \
+                    and instance.state.get('Name') == 'running':
                 sql_host = instance.public_dns_name
                 break
 db_config.update({'host': sql_host})
