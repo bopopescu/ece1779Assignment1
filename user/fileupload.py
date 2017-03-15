@@ -58,27 +58,26 @@ def file_upload():
     i3.save(filename=fname_negative)
 
     # save files to S3
-    s3 = boto3.client('s3')
-    s3.upload_file(fname,
-                   'ece1779assignment1source',
-                   os.path.basename(fname))
-    s3.upload_file(fname_rotated,
-                   'ece1779assignment1source',
-                   os.path.basename(fname_rotated))
-    s3.upload_file(fname_equalized,
-                   'ece1779assignment1source',
-                   os.path.basename(fname_equalized))
-    s3.upload_file(fname_negative,
-                   'ece1779assignment1source',
-                   os.path.basename(fname_negative))
+    # don't need to do this. Load generator can just test image processing without
+    # wasting data transfer fees
+    #s3 = boto3.client('s3')
+    #s3.upload_file(fname,
+    #               'ece1779assignment1source',
+    #               os.path.basename(fname))
+    #s3.upload_file(fname_rotated,
+    #               'ece1779assignment1source',
+    #               os.path.basename(fname_rotated))
+    #s3.upload_file(fname_equalized,
+    #               'ece1779assignment1source',
+    #               os.path.basename(fname_equalized))
+    #s3.upload_file(fname_negative,
+    #               'ece1779assignment1source',
+    #               os.path.basename(fname_negative))
 
     # save s3 keys to images database
     #todo
 
     # delete local copies of image
     #todo
-
-    # temporarily redirect to page showing image, but should redirect to landing page
-    #todo redirect to "show my images" page
 
     return "Success"
