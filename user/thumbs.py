@@ -10,4 +10,6 @@ def thumbs():
 
     images = db.get_images(session['username'])
 
-    return render_template('thumbs/thumbs.html', images=images)
+    return render_template('thumbs/thumbs.html',
+                           images=images,
+                           page_header="Your Images")
