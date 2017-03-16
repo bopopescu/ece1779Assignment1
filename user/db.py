@@ -96,7 +96,6 @@ def get_images(username):
 
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
-    print(str(rows))
 
     images = []
     for row in rows:
@@ -105,7 +104,6 @@ def get_images(username):
     cursor.close()
     cnx.close()
 
-    print(str(images))
     return images
 
 

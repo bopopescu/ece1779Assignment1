@@ -94,7 +94,7 @@ def image_transform():
     # get images from s3
     #
 
-    # temporarily redirect to page showing image, but should redirect to landing page
+    # temporarily redirect to page showing image, but should pass the s3 links
     # todo redirect to "show my images" page
     return render_template("imagetransform/view.html",
                            f1=fname,
