@@ -40,6 +40,9 @@ def login():
             # now get the password from the cursor
             first_row = cursor.fetchone()
 
+            cursor.close()
+            cnx.close()
+
             # if user doesn't exist, return an error message and reload login page
             if first_row is None:
                 return render_template('login/login.html',
@@ -92,6 +95,8 @@ def register():
                 '''
         cursor.execute(query, (username,))
         if cursor.fetchone() is not None:
+            cursor.close()
+            cnx.close()
             return render_template('login/register.html',
                                    page_header="Login",
                                    error_msg="Username already exits",
@@ -100,8 +105,12 @@ def register():
         # if all good, insert new user into users table
         query = '''
                 INSERT INTO users(login, password)
-                VALUES (%s,%s)'''
+                VALUES (%s,%s)
+                '''
         cursor.execute(query, (username, password))
         cnx.commit()
+
+        cursor.close()
+        cnx.close()
 
         return redirect(url_for('login'), code=307)

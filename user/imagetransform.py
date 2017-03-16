@@ -39,26 +39,26 @@ def image_transform():
     # tempdir = tempfile.gettempdir()
 
     # file is first saved and transformed locally, then it will be uploaded to S2
-    fname = os.path.join('user/static', new_file.filename)
+    fname = os.path.join('static', new_file.filename)
     new_file.save(fname)
     img = Image(filename=fname)
 
     # rotate the image and save
     i1 = img.clone()
     i1.rotate(180)
-    fname_rotated = os.path.join('user/static', 'rotated_' + new_file.filename)
+    fname_rotated = os.path.join('static', 'rotated_' + new_file.filename)
     i1.save(filename=fname_rotated)
 
     # equalize the image and save
     i2 = img.clone()
     i2.equalize()
-    fname_equalized = os.path.join('user/static', 'equalized_' + new_file.filename)
+    fname_equalized = os.path.join('static', 'equalized_' + new_file.filename)
     i2.save(filename=fname_equalized)
 
     # make a negative of the image and save
     i3 = img.clone()
     i3.negate()
-    fname_negative = os.path.join('user/static', 'negative_' + new_file.filename)
+    fname_negative = os.path.join('static', 'negative_' + new_file.filename)
     i3.save(filename=fname_negative)
 
     # save files to S3
@@ -93,7 +93,7 @@ def image_transform():
     # temporarily redirect to page showing image, but should redirect to landing page
     # todo redirect to "show my images" page
     return render_template("imagetransform/view.html",
-                           f1=fname[4:],
-                           f2=fname_rotated[4:],
-                           f3=fname_equalized[4:],
-                           f4=fname_negative[4:])
+                           f1=fname,
+                           f2=fname_rotated,
+                           f3=fname_equalized,
+                           f4=fname_negative)

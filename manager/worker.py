@@ -18,7 +18,7 @@ def create_ec2_worker(sql_host=db.db_config['host']):
     userdata = '''#cloud-config
     runcmd:
      - cd /home/ubuntu/Desktop/ece1779/ece1779Assignment1
-     - ./venv_linux/bin/python ece1779Assignment1.py {}
+     - ./venv_linux/bin/python user/run.py {}
     '''.format(sql_host)
 
     # create the worker instance
