@@ -1,4 +1,4 @@
-from manager import app, worker, db
+from manager import app, workers, db
 
 from flask import render_template, redirect, url_for, request
 
@@ -11,6 +11,8 @@ from operator import itemgetter
 def ec2_list():
 
     ec2 = boto3.resource('ec2')
+    elb = boto3.client('elb')
+
     instances = ec2.instances.all()
 
     return render_template('ec2_workers/list.html',
@@ -22,7 +24,7 @@ def ec2_list():
 def ec2_create():
 
     ec2 = boto3.resource('ec2')
-    worker.create_ec2_worker(sql_host=db.db_config['host'])
+    workers.create_ec2_worker(sql_host=db.db_config['host'])
 
     return redirect(url_for('ec2_list'))
 

@@ -3,7 +3,7 @@ from flask import Flask
 app = Flask(__name__)
 
 from manager import db
-from manager import worker
+from manager import workers
 from manager import loadbalancer
 from manager import index
 from manager import login_register

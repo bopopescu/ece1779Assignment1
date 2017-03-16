@@ -41,3 +41,37 @@ def create_loadbalancer():
     print('load balancer up and running on: ' + loadbalancer_host)
 
     return loadbalancer_host
+
+
+def get_all_instances():
+    ec2 = boto3.resource('ec2')
+    elb = boto3.client('elb')
+
+    # get all worker instances registered to the load balancer
+    instances_list = elb.describe_load_balancers(
+        LoadBalancerNames=[
+            elb_name,
+        ]
+    )['LoadBalancerDescriptions'][0]['Instances']
+
+    instances = []
+    for instance_dict in instances_list:
+        instances.append(ec2.Instance(instance_dict['InstanceId']))
+
+    return instances
+
+
+def get_health_status(id):
+
+    elb = boto3.client('elb')
+
+    instance_state = elb.describe_instance_health(
+        LoadBalancerName=elb_name,
+        Instances=[
+            {
+                'InstanceId': id
+            },
+        ]
+    )['InstanceStates'][0]['State']
+
+    return instance_state
