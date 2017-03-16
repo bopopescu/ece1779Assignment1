@@ -11,7 +11,7 @@ key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
 
 
-def create_ec2_worker(sql_host=db.db_config['host'], first_worker=False):
+def create_ec2_worker(sql_host=db.db_config['host']):
     ec2 = boto3.resource('ec2')
 
     # run app on ec2 instance by passing in mySQL server hostname as argument
@@ -38,11 +38,6 @@ def create_ec2_worker(sql_host=db.db_config['host'], first_worker=False):
             'Value': 'worker'
         },
     ]
-    if first_worker:
-        tags.append({
-            'Key': 'First Worker',
-            'Value': 'true'
-        })
     worker_instance.create_tags(
         Tags=tags
     )
@@ -79,18 +74,8 @@ def get_worker_utilization(id):
         EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
         MetricName=metric_name,
         Namespace=namespace,  # Unit='Percent',
-        Statistics=['Average', 'Maximum', 'Minimum'],
+        Statistics=['Average', 'Maximum'],
         Dimensions=[{'Name': 'InstanceId', 'Value': id}]
     )
-
-    cpu_stats = []
-
-    for point in cpu['Datapoints']:
-        hour = point['Timestamp'].hour
-        minute = point['Timestamp'].minute
-        time = hour + minute / 60
-        cpu_stats.append([time, point['Average']])
-
-    cpu_stats = sorted(cpu_stats, key=itemgetter(0))
 
     return cpu
