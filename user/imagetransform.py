@@ -89,15 +89,18 @@ def image_transform():
     db.save_images(session['username'], files)
 
     # delete local copies of image
-    # todo
+    for file in [fname, fname_rotated, fname_equalized, fname_negative]:
+        os.remove(file)
 
     # get images from s3
-    #
+    image_urls = []
+    for i in range(len(files)):
+        image_urls.append("https://s3.amazonaws.com/ece1779assignment1source/" + folder + files[i])
 
     # temporarily redirect to page showing image, but should pass the s3 links
     # todo redirect to "show my images" page
     return render_template("imagetransform/view.html",
-                           f1=fname,
-                           f2=fname_rotated,
-                           f3=fname_equalized,
-                           f4=fname_negative)
+                           f1=image_urls[0],
+                           f2=image_urls[1],
+                           f3=image_urls[2],
+                           f4=image_urls[3])
