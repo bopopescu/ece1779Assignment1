@@ -40,6 +40,7 @@ def image_transform():
 
     # file is first saved and transformed locally, then it will be uploaded to S2
     fname = os.path.join('user/static', new_file.filename)
+    new_file.save(fname)
     img = Image(filename=fname)
     img.save(filename=fname)
 
@@ -89,6 +90,9 @@ def image_transform():
 
     # delete local copies of image
     # todo
+
+    # get images from s3
+    #
 
     # temporarily redirect to page showing image, but should redirect to landing page
     # todo redirect to "show my images" page
