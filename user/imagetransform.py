@@ -7,6 +7,8 @@ import boto3
 
 from wand.image import Image
 
+from user import db
+
 
 @app.route('/imagetransform/form', methods=['GET'])
 # Return file upload form
@@ -61,21 +63,29 @@ def image_transform():
 
     # save files to S3
     s3 = boto3.client('s3')
+
+    files = [os.path.basename(fname),
+             os.path.basename(fname_rotated),
+             os.path.basename(fname_equalized),
+             os.path.basename(fname_negative)]
+
+    folder = session['username'] + "/"
+
     s3.upload_file(fname,
                    'ece1779assignment1source',
-                   os.path.basename(fname))
+                   folder + files[0])
     s3.upload_file(fname_rotated,
                    'ece1779assignment1source',
-                   os.path.basename(fname_rotated))
+                   folder + files[1])
     s3.upload_file(fname_equalized,
                    'ece1779assignment1source',
-                   os.path.basename(fname_equalized))
+                   folder + files[2])
     s3.upload_file(fname_negative,
                    'ece1779assignment1source',
-                   os.path.basename(fname_negative))
+                   folder + files[3])
 
     # save s3 keys to images database
-    # todo
+    db.save_images(session['username'], files)
 
     # delete local copies of image
     # todo
