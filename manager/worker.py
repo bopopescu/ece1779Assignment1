@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from manager import loadbalancer, db
 
-ami_id = 'ami-5cce674a'
+ami_id = 'ami-81d77c97'
 instance_type = 't2.micro'
 key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
