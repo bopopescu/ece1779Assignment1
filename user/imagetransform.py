@@ -89,7 +89,8 @@ def image_transform():
     db.save_images(session['username'], files)
 
     # delete local copies of image
-    # todo
+    for file in [fname, fname_rotated, fname_equalized, fname_negative]:
+        os.remove(file)
 
     # get images from s3
     image_urls = []
