@@ -39,9 +39,8 @@ def image_transform():
     # tempdir = tempfile.gettempdir()
 
     # file is first saved and transformed locally, then it will be uploaded to S2
-    print(os.getcwd())
-    print(new_file.filename)
     fname = os.path.join('user/static', new_file.filename)
+    new_file.save(fname)
     img = Image(filename=fname)
 
     # rotate the image and save
