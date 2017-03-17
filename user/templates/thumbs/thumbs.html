@@ -1,10 +1,15 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% for image in images %}
-        <img width="20%" src = '{{ image[0] }}' />
-        <img width="20%" src = '{{ image[1] }}' />
-        <img width="20%" src = '{{ image[2] }}' />
-        <img width="20%" src = '{{ image[3] }}' />
-        <br/>
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Thumbnails</title>
+</head>
+
+<body>
+    <h1>Thumbnails</h1>
+    {% for image,id in images_ids %}
+        <a href = "{{ url_for('thumbs_view', id=id) }}">
+        <img width="20%" src = '{{ image }}' />
+        </a>
     {%  endfor %}
-{% endblock %}
+</body>
+</html>
