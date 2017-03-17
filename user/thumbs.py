@@ -12,7 +12,9 @@ def thumbs():
 
     images, ids = db.get_images(session['username'])
 
-    return render_template('thumbs/thumbs.html', images_ids=zip(images,ids))
+    return render_template('thumbs/thumbs.html',
+                           images_ids=zip(images,ids),
+                           page_header="Your Images")
 
 
 @app.route('/thumbs/<id>', methods=['GET'])
@@ -21,13 +23,16 @@ def thumbs_view(id):
         return "you must be logged in to do that"
 
     image_urls = get_urls(id)
+
     return render_template("imagetransform/view.html",
-                        f1=image_urls[0],
-                        f2=image_urls[1],
-                        f3=image_urls[2],
-                        f4=image_urls[3])
+                           f1=image_urls[0],
+                           f2=image_urls[1],
+                           f3=image_urls[2],
+                           f4=image_urls[3],
+                           page_header="Image and Transformations")
 
 
+# Get all of urls of an image and its transformations
 def get_urls(id):
     cnx = db.connect_to_database()
     cursor = cnx.cursor()
