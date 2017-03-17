@@ -11,3 +11,4 @@ from manager import start
 from manager import stop
 from manager import ec2
 from manager import admin
+from manager import s3
