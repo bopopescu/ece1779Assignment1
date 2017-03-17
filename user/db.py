@@ -96,7 +96,7 @@ def get_images(username):
         return None
 
     query = '''
-            SELECT * FROM images WHERE users_id = %s
+            SELECT key1, id FROM images WHERE users_id = %s
             '''
 
     cursor.execute(query, (user_id,))
@@ -106,15 +106,16 @@ def get_images(username):
 
     images = []
     for row in rows:
-        images.append([url_start + row[1],
-                       url_start + row[2],
-                       url_start + row[3],
-                       url_start + row[4]])
+        images.append(url_start + row[0])
+
+    ids = []
+    for row in rows:
+        ids.append(row[1])
 
     cursor.close()
     cnx.close()
 
-    return images
+    return images, ids
 
 
 @app.teardown_appcontext

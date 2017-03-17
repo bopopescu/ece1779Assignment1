@@ -6,12 +6,10 @@
 
 <body>
     <h1>Thumbnails</h1>
-    {% for image in images %}
-        <img width="20%" src = '{{ image[0] }}' />
-        <img width="20%" src = '{{ image[1] }}' />
-        <img width="20%" src = '{{ image[2] }}' />
-        <img width="20%" src = '{{ image[3] }}' />
-        <br/>
+    {% for image,id in images_ids %}
+        <a href = "{{ url_for('thumbs_view', id=id) }}">
+        <img width="20%" src = '{{ image }}' />
+        </a>
     {%  endfor %}
 </body>
 </html>
