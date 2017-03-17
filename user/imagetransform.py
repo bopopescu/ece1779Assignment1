@@ -66,25 +66,26 @@ def image_transform():
     # save files to S3
     s3 = boto3.client('s3')
 
-    files = [os.path.basename(fname),
-             os.path.basename(fname_rotated),
-             os.path.basename(fname_equalized),
-             os.path.basename(fname_negative)]
-
     folder = session['username'] + "/"
+
+    files = [folder + os.path.basename(fname),
+             folder + os.path.basename(fname_rotated),
+             folder + os.path.basename(fname_equalized),
+             folder + os.path.basename(fname_negative)]
+
 
     s3.upload_file(fname,
                    'ece1779assignment1source',
-                   folder + files[0])
+                   files[0])
     s3.upload_file(fname_rotated,
                    'ece1779assignment1source',
-                   folder + files[1])
+                   files[1])
     s3.upload_file(fname_equalized,
                    'ece1779assignment1source',
-                   folder + files[2])
+                   files[2])
     s3.upload_file(fname_negative,
                    'ece1779assignment1source',
-                   folder + files[3])
+                   files[3])
 
     # save s3 keys to images database
     db.save_images(session['username'], files)
@@ -96,7 +97,7 @@ def image_transform():
     # get images from s3
     image_urls = []
     for i in range(len(files)):
-        image_urls.append("https://s3.amazonaws.com/ece1779assignment1source/" + folder + files[i])
+        image_urls.append("https://s3.amazonaws.com/ece1779assignment1source/" + files[i])
 
     # temporarily redirect to page showing image, but should pass the s3 links
     # todo redirect to "show my images" page

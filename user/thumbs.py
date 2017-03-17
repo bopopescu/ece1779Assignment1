@@ -48,7 +48,7 @@ def get_urls(id):
     cursor.execute(query, (user_id, id))
     rows = cursor.fetchall()
 
-    url_start = "https://s3.amazonaws.com/ece1779assignment1source/" + session['username'] + "/"
+    url_start = "https://s3.amazonaws.com/ece1779assignment1source/"
 
     image_urls = []
     for row in rows:

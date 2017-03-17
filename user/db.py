@@ -68,9 +68,9 @@ def save_images(username, files):
         cnx.close()
         return
 
-    delete_query = '''DELETE FROM images WHERE key1 = %s'''
+    delete_query = '''DELETE FROM images WHERE key1 = %s AND users_id = %s'''
 
-    cursor.execute(delete_query, (files[0],))
+    cursor.execute(delete_query, (files[0], user_id))
 
     query = '''
             INSERT INTO images (key1, key2, key3, key4, users_id)
@@ -102,7 +102,7 @@ def get_images(username):
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
 
-    url_start = "https://s3.amazonaws.com/ece1779assignment1source/" + username + "/"
+    url_start = "https://s3.amazonaws.com/ece1779assignment1source/"
 
     images = []
     for row in rows:
