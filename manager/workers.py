@@ -1,6 +1,6 @@
 from manager import app, loadbalancer
 
-from flask import render_template
+from flask import render_template, redirect, url_for
 import boto3
 import time
 from datetime import datetime, timedelta
@@ -58,8 +58,6 @@ def create_ec2_worker(sql_host=db.db_config['host']):
 
 
 def get_worker_utilization(id):
-    ec2 = boto3.resource('ec2')
-
     client = boto3.client('cloudwatch')
 
     metric_name = 'CPUUtilization'
@@ -83,6 +81,15 @@ def get_worker_utilization(id):
     )
 
     return cpu
+
+
+def get_worker_cpu_utilization(id):
+    cpu = get_worker_utilization(id)
+    max_cpu = 0
+    for point in cpu['Datapoints']:
+        max_cpu = max(max_cpu, point['Maximum'])
+
+    return max_cpu
 
 
 def grow_pool():
@@ -140,11 +147,35 @@ def shrink_pool():
 
 @app.route('/worker_list', methods=['GET'])
 def worker_list():
-
+    # get worker instances
     instances = loadbalancer.get_all_instances()
+
+    # get instances health (InService/OutOfService)
+    instances_health = []
+    for instance in instances:
+        instances_health.append(loadbalancer.get_health_status(instance.id))
+
+    # get instances cpu utilization
+    instances_cpu_utilization = []
+    for instance in instances:
+        instances_cpu_utilization.append(get_worker_cpu_utilization(instance.id))
+
+    return_value = zip(instances, instances_health, instances_cpu_utilization)
 
     return render_template('workers/list.html',
                            page_header="Worker Pool",
-                           instances=instances)
+                           instances=return_value)
 
-    return
+
+@app.route('/worker_list/grow', methods=['POST'])
+def grow_pool_button():
+    create_ec2_worker()
+
+    return redirect(url_for('worker_list'))
+
+
+@app.route('/worker_list/shrink', methods=['POST'])
+def shrink_pool_button():
+    shrink_pool()
+
+    return redirect(url_for('worker_list'))

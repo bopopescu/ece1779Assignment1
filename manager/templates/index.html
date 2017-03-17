@@ -5,17 +5,8 @@
             <li><a href="{{url_for('start_sql')}}">Start sql server</a></li>
         {% else %}
             <div>
-                <li><a href="{{url_for('start')}}">Start user app server</a></li>
-                <li><a href="{{url_for('stop')}}">Clean up</a></li>
-                <br>
-                <li><a href="{{url_for('ec2_list')}}">List workers</a></li>
-                <li><a href="{{url_for('admin')}}">Grow worker pool</a></li>
-                <li><a href="{{url_for('admin')}}">Shrink worker pool</a></li>
+                <li><a href="{{url_for('worker_list')}}">List workers</a></li>
                 <li><a href="{{url_for('admin')}}">Configure auto-scaling policy</a></li>
-                <li><a href="{{url_for('admin')}}">Delete all data</a></li>
-
-
-                <li><a href="{{url_for('admin')}}">Adjust worker pools</a></li>
                 <li><a href="{{url_for('admin')}}">Delete all data</a></li>
             </div>
         {% endif %}

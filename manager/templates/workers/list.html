@@ -1,39 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <form action="{{ url_for('ec2_create') }}"
+    <form action="{{ url_for('grow_pool_button') }}"
           method="post">
-          <input type="submit" value="New">
+          <input type="submit" value="Grow Worker Pool">
     </form>
-
-    <form action="{{ url_for("index") }}"
-          methods='get'>
-        <input type="submit" value="Back">
+    <form action="{{ url_for('shrink_pool_button') }}"
+          method="post">
+          <input type="submit" value="Shrink Worker Pool">
     </form>
 
     <table>
     <thead>
         <th>ID</th>
-        <th>Role</th>
-        <th>Type</th>
-        <th>Availability Zone</th>
-        <th>Status</th>
+        <th>Health</th>
+        <th>CPU Utilization</th>
     </thead>
-    {% for instance in instances %}
+    {% for instance, instance_health, instance_cpu_utilization in instances %}
         <tr>
             <td>{{ instance.id }}</td>
-            {% if instance.tags is not none %}
-                {% for tag in instance.tags %}
-                    {% if tag['Key'] == 'Role' %}
-                        <td>{{ tag['Value'] }}</td>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <td>None</td>
-            {% endif %}
-            <td>{{ instance.instance_type }}</td>
-            <td>{{ instance.placement['AvailabilityZone'] }}</td>
-            <td>{{ instance.state['Name'] }}</td>
+
+            <td>{{ instance_health }}</td>
+            <td>{{ instance_cpu_utilization }}</td>
             <td>
                 <form action="{{ url_for('ec2_view', id=instance.id)}}"
                       method="get">
