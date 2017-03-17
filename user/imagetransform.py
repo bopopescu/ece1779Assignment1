@@ -15,7 +15,8 @@ from user import db
 def image_form():
     if 'username' not in session:
         return "you must be logged in to do that"
-    return render_template("imagetransform/form.html")
+    return render_template("imagetransform/form.html",
+                           page_header="Upload Image")
 
 
 @app.route('/imagetransform', methods=['POST'])
@@ -103,4 +104,5 @@ def image_transform():
                            f1=image_urls[0],
                            f2=image_urls[1],
                            f3=image_urls[2],
-                           f4=image_urls[3])
+                           f4=image_urls[3],
+                           page_header="Image uploaded")
