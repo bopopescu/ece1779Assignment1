@@ -27,38 +27,24 @@ def login():
             # look up the user's password from the users table using username
 
             # connect to the database
-            cnx = get_db()
-            cursor = cnx.cursor()
+            admin_username = "admin"
+            admin_password = "ece1779a1pass"
 
-            # sanitize sql query (provided_username)
-            # todo
-
-            # query the database for the password
-            query = "SELECT * FROM users WHERE login = %s"
-            cursor.execute(query, (provided_username,))
-
-            # now get the password from the cursor
-            first_row = cursor.fetchone()
-
-            # if user doesn't exist, return an error message and reload login page
-            if first_row is None:
+            # if user is not admin, return an error message
+            if provided_username != admin_username:
                 return render_template('login/login.html',
                                        page_header="Login",
-                                       error_msg="No such username",
+                                       error_msg="That user does not have access to this page",
                                        username=request.form.get('username'))
-            else:
-                true_password = first_row[2]
-
-            # if password matches, create a session for the user
-            if provided_password == true_password:
-                session['username'] = provided_username
-                return redirect(url_for('index'))
             # if password doesn't match, return an error message and reload login page
-            else:
+            elif provided_password != admin_password:
                 return render_template('login/login.html',
                                        page_header="Login",
                                        error_msg="Wrong password",
                                        username=request.form.get('username'))
+            else:
+                session['username'] = provided_username
+                return redirect(url_for('index'))
 
 
 @app.route('/logout', methods=['GET'])
