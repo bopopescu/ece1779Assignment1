@@ -4,6 +4,7 @@ import statistics
 
 from manager import workers, db, loadbalancer
 
+global pv
 
 class PolicyVars(object):
     __instance = None
@@ -11,10 +12,11 @@ class PolicyVars(object):
     def __new__(cls):
         if PolicyVars.__instance is None:
             PolicyVars.__instance = object.__new__(cls)
+            # default values. 0 means just grow/shrink by one instance
             PolicyVars.__instance.high_cpu_threshold = 40
             PolicyVars.__instance.low_cpu_threshold = 20
-            PolicyVars.__instance.scaling_multiplier = 2
-            PolicyVars.__instance.scaling_divisor = 2
+            PolicyVars.__instance.scaling_multiplier = 0
+            PolicyVars.__instance.scaling_divisor = 0
         return PolicyVars.__instance
 
 
@@ -82,17 +84,27 @@ def background_monitor():
         # if there are no running workers, start one
         if running_workers == 0:
             print('starting first worker...')
-            workers.create_ec2_worker(db.db_config['host'])
+            workers.create_ec2_worker()
             time.sleep(30)
 
         if average_utilization > pv.high_cpu_threshold:
-            print('going to grow pool...')
-            workers.grow_pool()
+            number_to_grow = 0
+            if pv.scaling_multiplier == 0:
+                number_to_grow = 1
+            else:
+                number_to_grow = running_workers * pv.scaling_multiplier
+            print('going to grow pool by: ' + str(number_to_grow))
+            workers.grow_pool(number_to_grow)
         elif average_utilization < pv.low_cpu_threshold:
             if running_workers == 1:
                 print('only one worker, not shrinking')
             else:
-                print('going to shrink pool...')
+                number_to_shrink = 0
+                if pv.scaling_divisor == 0:
+                    number_to_shrink = 1
+                else:
+                    number_to_shrink = running_workers - running_workers//pv.scaling_divisor
+                print('going to shrink pool by: ' + str(number_to_shrink))
                 workers.shrink_pool()
 
         print('finished monitor cycle\n')
