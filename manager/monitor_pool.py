@@ -4,8 +4,6 @@ import statistics
 
 from manager import workers, db, loadbalancer
 
-global pv
-
 class PolicyVars(object):
     __instance = None
 
@@ -18,6 +16,11 @@ class PolicyVars(object):
             PolicyVars.__instance.scaling_multiplier = 0
             PolicyVars.__instance.scaling_divisor = 0
         return PolicyVars.__instance
+
+
+# Store policy variables
+global pv
+pv = PolicyVars()
 
 
 def background_monitor():
@@ -35,9 +38,6 @@ def background_monitor():
 
         # get all worker instances registered to the load balancer
         instances = loadbalancer.get_all_instances()
-
-        # get current policy variables
-        pv = PolicyVars()
 
         print('\n')
         print('high thresh: ' + str(pv.high_cpu_threshold))
