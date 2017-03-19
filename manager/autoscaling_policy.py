@@ -39,9 +39,7 @@ def set_autoscaling_policy():
         pv.scaling_multiplier = mult
         pv.scaling_divisor = div
 
-        return render_template("/autoscaling/form.html",
-                               page_header="Welcome to ECE1771 Assignment 1 Manager",
-                               pv=monitor_pool.PolicyVars())
+        return redirect(url_for('index'))
 
 
 def check_errors(high, low, mult, div):
