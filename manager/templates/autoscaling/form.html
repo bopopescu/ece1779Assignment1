@@ -1,34 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-    {%  if error_msg %}
-        <div>
-            <b>{{ error_msg }}</b>
-        </div>
-    {%  endif %}
-    <form method="post" action={{ url_for("set_autoscaling_policy") }}>
-        <div>
-            <label>CPU threshold to grow pool (default: 40):</label>
-            <input type="text" name="expand_cpu_threshold" value="{{ expand_cpu_threshold }}">
-        </div>
-        <div>
-            <label>CPU threshold to shrink pool (default: 20):</label>
-            <input type="text" name="shrink_cpu_threshold" value="{{ shrink_cpu_threshold }}">
-        </div>
-        <div>
-            <label>Ratio to grow pool by (e.g. a ratio of 2 doubles the number of workers) (default: 0):</label>
-            <input type="text" name="expand_ratio" value="{{ expand_ratio }}">
-        </div>
-        <div>
-            <label>Ratio to shrink pool by (e.g. a ratio of 4 shuts down 75% of the current workers) (default: 0) :</label>
-            <input type="text" name="shrink_ratio" value="{{ shrink_ratio }}">
-        </div>
-        <div>
-            <input type="submit" name="submit" value="Submit">
-        </div>
+    {% for error in errors %}
+        <p>Error: {{ error }}</p>
+    {% endfor %}
+    <form action="{{ url_for('admin') }}" method="post">
+        High CPU Threshold = <input type="text" name="high" value="{{ pv.high_cpu_threshold }}"><br/>
+        Low CPU Threshold = <input type="text" name="low" value="{{ pv.low_cpu_threshold }}"><br/>
+        Scaling Multiplier = <input type="text" name="mult" value="{{ pv.scaling_multiplier }}"><br/>
+        Scaling Divisor = <input type="text" name="div" value="{{ pv.scaling_divisor }}"><br/>
+        All values will be rounded to integer<br/>
+        <input type="submit" value="Update">
     </form>
-
-    <form action="{{ url_for("index") }}">
-            <input type="submit" value="Back"/>
-    </form>
-
 {% endblock %}

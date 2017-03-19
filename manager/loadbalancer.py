@@ -27,14 +27,14 @@ health_check = {
 def create_loadbalancer():
     elb = boto3.client('elb')
     elb.create_load_balancer(LoadBalancerName=elb_name,
-                                    Listeners=worker_listeners,
-                                    AvailabilityZones=availability_zones,
-                                    SecurityGroups=security_group
-                                    )
+                             Listeners=worker_listeners,
+                             AvailabilityZones=availability_zones,
+                             SecurityGroups=security_group
+                             )
     # configure health check
     elb.configure_health_check(LoadBalancerName=elb_name,
-                                      HealthCheck=health_check
-                                      )
+                               HealthCheck=health_check
+                               )
 
     elb_description = elb.describe_load_balancers(LoadBalancerNames=[elb_name])
     loadbalancer_host = elb_description.get('LoadBalancerDescriptions')[0].get('DNSName')
@@ -62,7 +62,6 @@ def get_all_instances():
 
 
 def get_health_status(id):
-
     elb = boto3.client('elb')
 
     instance_state = elb.describe_instance_health(

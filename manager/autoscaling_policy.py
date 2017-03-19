@@ -8,10 +8,9 @@ from manager import monitor_pool
 
 
 @app.route('/admin', methods=['GET', 'POST'])
-# main landing page
-def admin():
+def set_autoscaling_policy():
     if request.method == 'GET':
-        return render_template("/admin/admin.html",
+        return render_template("/autoscaling/form.html",
                                page_header="Welcome to ECE1771 Assignment 1 Manager",
                                pv=monitor_pool.PolicyVars())
     elif request.method == 'POST':
@@ -22,14 +21,14 @@ def admin():
             div = int(request.form.get('div'))
         except:
             errors = ["All inputs must be numeric"]
-            return render_template("/admin/admin.html",
+            return render_template("/autoscaling/form.html",
                                    page_header="Welcome to ECE1771 Assignment 1 Manager",
                                    pv=monitor_pool.PolicyVars(),
                                    errors=errors)
 
         errors = check_errors(high, low, mult, div)
         if errors:
-            return render_template("/admin/admin.html",
+            return render_template("/autoscaling/form.html",
                                    page_header="Welcome to ECE1771 Assignment 1 Manager",
                                    pv=monitor_pool.PolicyVars(),
                                    errors=errors)
@@ -40,7 +39,7 @@ def admin():
         pv.scaling_multiplier = mult
         pv.scaling_divisor = div
 
-        return render_template("/admin/admin.html",
+        return render_template("/autoscaling/form.html",
                                page_header="Welcome to ECE1771 Assignment 1 Manager",
                                pv=monitor_pool.PolicyVars())
 

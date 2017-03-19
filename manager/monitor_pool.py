@@ -4,8 +4,10 @@ import statistics
 
 from manager import workers, db, loadbalancer
 
+
 class PolicyVars(object):
     __instance = None
+
     def __new__(cls):
         if PolicyVars.__instance is None:
             PolicyVars.__instance = object.__new__(cls)
@@ -34,10 +36,13 @@ def background_monitor():
 
         # get current policy variables
         pv = PolicyVars()
-        print("high thresh: " + str(pv.high_cpu_threshold))
-        print("low thresh:  " + str(pv.low_cpu_threshold))
-        print("divisor:     " + str(pv.scaling_multiplier))
-        print("multiplier:  " + str(pv.scaling_divisor))
+
+        print('\n')
+        print('high thresh: ' + str(pv.high_cpu_threshold))
+        print('low thresh:  ' + str(pv.low_cpu_threshold))
+        print('divisor:     ' + str(pv.scaling_multiplier))
+        print('multiplier:  ' + str(pv.scaling_divisor))
+        print('\n')
 
         cpu_utilizations = []
         print('worker instances: ')
@@ -89,18 +94,6 @@ def background_monitor():
             else:
                 print('going to shrink pool...')
                 workers.shrink_pool()
-
-        # if there are quiet workers and no busy workers, shrink the pool
-        #if quiet_workers >= 1 and busy_workers == 0:
-        #    if running_workers == 1:
-        #        print('only one worker, not shrinking')
-        #    elif running_workers > 1:
-        #        print('going to shrink pool...')
-        #        workers.shrink_pool()
-        # if there are busy workers and no quiet or starting-up workers, grow the pool
-        #elif busy_workers >= 1 and quiet_workers == 0 and outofservice_workers == 0:
-        #    print('going to grow pool...')
-        #    workers.grow_pool()
 
         print('finished monitor cycle\n')
         time.sleep(10)

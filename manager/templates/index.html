@@ -6,7 +6,7 @@
         {% else %}
             <div>
                 <li><a href="{{url_for('worker_list')}}">List workers</a></li>
-                <li><a href="{{url_for('admin')}}">Configure auto-scaling policy</a></li>
+                <li><a href="{{url_for('set_autoscaling_policy')}}">Configure auto-scaling policy</a></li>
                 <li><a href="{{url_for('delete_data')}}">Delete all data</a></li>
             </div>
         {% endif %}

@@ -10,7 +10,7 @@ from manager import index
 from manager import login_register
 from manager import start
 from manager import stop
-from manager import admin
+from manager import autoscaling_policy
 from manager import s3
 
 
