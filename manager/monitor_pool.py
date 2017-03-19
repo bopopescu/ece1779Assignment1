@@ -24,6 +24,8 @@ pv = PolicyVars()
 
 
 def background_monitor():
+    print('starting pool monitor')
+
     ec2 = boto3.resource('ec2')
     elb = boto3.client('elb')
 
@@ -103,9 +105,11 @@ def background_monitor():
                 if pv.scaling_divisor == 0:
                     number_to_shrink = 1
                 else:
-                    number_to_shrink = running_workers - running_workers//pv.scaling_divisor
+                    number_to_shrink = \
+                        min(running_workers - 1,
+                            running_workers - running_workers//pv.scaling_divisor)
                 print('going to shrink pool by: ' + str(number_to_shrink))
-                workers.shrink_pool()
+                workers.shrink_pool(number_to_shrink)
 
         print('finished monitor cycle\n')
         time.sleep(10)

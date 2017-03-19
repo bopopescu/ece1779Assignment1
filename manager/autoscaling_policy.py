@@ -7,7 +7,7 @@ from flask import render_template, redirect, url_for
 from manager import monitor_pool
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/autoscale_policy', methods=['GET', 'POST'])
 def set_autoscaling_policy():
     if request.method == 'GET':
         return render_template("/autoscaling/form.html",
