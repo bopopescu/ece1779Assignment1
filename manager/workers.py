@@ -34,7 +34,7 @@ def create_ec2_worker(sql_host=db.db_config['host']):
                                            SecurityGroupIds=security_group,
                                            Monitoring={'Enabled': True}
                                            )[0]
-    time.sleep(10)
+    time.sleep(2)
     tags = [
         {
             'Key': 'Role',
@@ -52,7 +52,7 @@ def create_ec2_worker(sql_host=db.db_config['host']):
                                                   'InstanceId': worker_instance.id
                                               }]
                                               )
-    time.sleep(10)
+    time.sleep(2)
 
     return worker_instance
 
@@ -72,7 +72,7 @@ def get_worker_utilization(id):
 
     cpu = client.get_metric_statistics(
         Period=1 * 60,
-        StartTime=datetime.utcnow() - timedelta(seconds=2 * 60),  # go two minutes back
+        StartTime=datetime.utcnow() - timedelta(seconds=1 * 60),  # go only one minute back
         EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
         MetricName=metric_name,
         Namespace=namespace,  # Unit='Percent',

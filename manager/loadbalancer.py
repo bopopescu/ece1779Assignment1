@@ -1,3 +1,5 @@
+from manager import app
+
 import boto3
 
 elb_name = 'ece1779-loadbalancer'
@@ -74,3 +76,14 @@ def get_health_status(id):
     )['InstanceStates'][0]['State']
 
     return instance_state
+
+
+@app.route('/loadbalancer', methods=['GET'])
+def lb_dns():
+    elb = boto3.client('elb')
+
+    loadbalancer_dns = elb.describe_load_balancers(
+        LoadBalancerNames=[
+            elb_name,
+        ])['LoadBalancerDescriptions'][0]['DNSName']
+    return loadbalancer_dns
