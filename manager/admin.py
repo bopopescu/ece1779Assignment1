@@ -7,45 +7,42 @@ from flask import render_template, redirect, url_for
 from manager import monitor_pool
 
 
-@app.route('/admin', methods=['GET'])
+@app.route('/admin', methods=['GET', 'POST'])
 # main landing page
 def admin():
-    return render_template("/admin/admin.html",
-                           page_header="Welcome to ECE1771 Assignment 1 Manager",
-                           pv=monitor_pool.PolicyVars())
-
-
-@app.route('/admin/update', methods=['POST'])
-def admin_update():
-
-    try:
-        high = int(request.form.get('high'))
-        low = int(request.form.get('low'))
-        mult = int(request.form.get('mult'))
-        div = int(request.form.get('div'))
-    except:
-        errors = ["All inputs must be numeric"]
+    if request.method == 'GET':
         return render_template("/admin/admin.html",
                                page_header="Welcome to ECE1771 Assignment 1 Manager",
-                               pv=monitor_pool.PolicyVars(),
-                               errors=errors)
+                               pv=monitor_pool.PolicyVars())
+    elif request.method == 'POST':
+        try:
+            high = int(request.form.get('high'))
+            low = int(request.form.get('low'))
+            mult = int(request.form.get('mult'))
+            div = int(request.form.get('div'))
+        except:
+            errors = ["All inputs must be numeric"]
+            return render_template("/admin/admin.html",
+                                   page_header="Welcome to ECE1771 Assignment 1 Manager",
+                                   pv=monitor_pool.PolicyVars(),
+                                   errors=errors)
 
-    errors = check_errors(high, low, mult, div)
-    if errors:
+        errors = check_errors(high, low, mult, div)
+        if errors:
+            return render_template("/admin/admin.html",
+                                   page_header="Welcome to ECE1771 Assignment 1 Manager",
+                                   pv=monitor_pool.PolicyVars(),
+                                   errors=errors)
+
+        pv = monitor_pool.PolicyVars()
+        pv.high_cpu_threshold = high
+        pv.low_cpu_threshold = low
+        pv.scaling_multiplier = mult
+        pv.scaling_divisor = div
+
         return render_template("/admin/admin.html",
                                page_header="Welcome to ECE1771 Assignment 1 Manager",
-                               pv=monitor_pool.PolicyVars(),
-                               errors=errors)
-
-    pv = monitor_pool.PolicyVars()
-    pv.high_cpu_threshold = high
-    pv.low_cpu_threshold = low
-    pv.scaling_multiplier = mult
-    pv.scaling_divisor = div
-
-    return render_template("/admin/admin.html",
-                           page_header="Welcome to ECE1771 Assignment 1 Manager",
-                           pv=monitor_pool.PolicyVars())
+                               pv=monitor_pool.PolicyVars())
 
 
 def check_errors(high, low, mult, div):
