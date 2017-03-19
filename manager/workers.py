@@ -92,7 +92,7 @@ def get_worker_cpu_utilization(id):
     return max_cpu
 
 
-def grow_pool():
+def grow_pool(number=0):
     ec2 = boto3.resource('ec2')
 
     # first check that there isn't already a worker being fired up
@@ -108,12 +108,13 @@ def grow_pool():
 
     # fire up another worker
     print("creating new worker...\n")
-    create_ec2_worker(db.db_config['host'])
+    for i in range(number):
+        create_ec2_worker()
 
     return
 
 
-def shrink_pool():
+def shrink_pool(number=0):
     ec2 = boto3.resource('ec2')
     elb = boto3.client('elb')
 
@@ -121,26 +122,28 @@ def shrink_pool():
     instances = loadbalancer.get_all_instances()
 
     # find quietest instance, and mark it for execution
-    instance_to_kill = None
-    min_cpu = 100
-    for instance in instances:
+    for i in range(number):
+        instance_to_kill = None
+        min_cpu = 100
+        for instance in instances:
 
-        # first make sure instance is in service
-        instance_state = loadbalancer.get_health_status(instance.id)
-        if instance_state != 'InService':
-            continue
+            # first make sure instance is in service
+            instance_state = loadbalancer.get_health_status(instance.id)
+            if instance_state != 'InService':
+                continue
 
-        cpu = get_worker_utilization(instance.id)
-        for point in cpu['Datapoints']:
-            if point['Maximum'] < min_cpu:
-                min_cpu = point['Maximum']
-                instance_to_kill = instance
+            cpu = get_worker_utilization(instance.id)
+            for point in cpu['Datapoints']:
+                if point['Maximum'] < min_cpu:
+                    min_cpu = point['Maximum']
+                    instance_to_kill = instance
 
-    if instance_to_kill is not None:
-        print("terminating instance " + instance_to_kill.id + "...\n")
-        instance_to_kill.terminate()
-    else:
-        print('did not find an instance to kill\n')
+        if instance_to_kill is not None:
+            print("terminating instance " + instance_to_kill.id + "...\n")
+            instance_to_kill.terminate()
+            time.sleep(1)
+        else:
+            print('did not find an instance to kill\n')
 
     return
 
@@ -177,5 +180,100 @@ def grow_pool_button():
 @app.route('/worker_list/shrink', methods=['POST'])
 def shrink_pool_button():
     shrink_pool()
+
+    return redirect(url_for('worker_list'))
+
+@app.route('/workers/<id>', methods=['GET'])
+def worker_view(id):
+    ec2 = boto3.resource('ec2')
+
+    instance = ec2.Instance(id)
+
+    client = boto3.client('cloudwatch')
+
+    metric_name = 'CPUUtilization'
+
+    #    CPUUtilization, NetworkIn, NetworkOut, NetworkPacketsIn,
+    #    NetworkPacketsOut, DiskWriteBytes, DiskReadBytes, DiskWriteOps,
+    #    DiskReadOps, CPUCreditBalance, CPUCreditUsage, StatusCheckFailed,
+    #    StatusCheckFailed_Instance, StatusCheckFailed_System
+
+    namespace = 'AWS/EC2'
+    statistic = 'Average'                   # could be Sum,Maximum,Minimum,SampleCount,Average
+
+    cpu = client.get_metric_statistics(
+        Period=1 * 60,
+        StartTime=datetime.utcnow() - timedelta(seconds=60 * 60),
+        EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
+        MetricName=metric_name,
+        Namespace=namespace,  # Unit='Percent',
+        Statistics=[statistic],
+        Dimensions=[{'Name': 'InstanceId', 'Value': id}]
+    )
+
+    cpu_stats = []
+
+    for point in cpu['Datapoints']:
+        hour = point['Timestamp'].hour
+        minute = point['Timestamp'].minute
+        time = hour + minute/60
+        cpu_stats.append([time,point['Average']])
+
+    cpu_stats = sorted(cpu_stats, key=itemgetter(0))
+
+    statistic = 'Sum'  # could be Sum,Maximum,Minimum,SampleCount,Average
+
+    network_in = client.get_metric_statistics(
+        Period=1 * 60,
+        StartTime=datetime.utcnow() - timedelta(seconds=60 * 60),
+        EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
+        MetricName='NetworkIn',
+        Namespace=namespace,  # Unit='Percent',
+        Statistics=[statistic],
+        Dimensions=[{'Name': 'InstanceId', 'Value': id}]
+    )
+
+    net_in_stats = []
+
+    for point in network_in['Datapoints']:
+        hour = point['Timestamp'].hour
+        minute = point['Timestamp'].minute
+        time = hour + minute/60
+        net_in_stats.append([time,point['Sum']])
+
+    net_in_stats = sorted(net_in_stats, key=itemgetter(0))
+
+    network_out = client.get_metric_statistics(
+        Period=5 * 60,
+        StartTime=datetime.utcnow() - timedelta(seconds=60 * 60),
+        EndTime=datetime.utcnow() - timedelta(seconds=0 * 60),
+        MetricName='NetworkOut',
+        Namespace=namespace,  # Unit='Percent',
+        Statistics=[statistic],
+        Dimensions=[{'Name': 'InstanceId', 'Value': id}]
+    )
+
+    net_out_stats = []
+
+    for point in network_out['Datapoints']:
+        hour = point['Timestamp'].hour
+        minute = point['Timestamp'].minute
+        time = hour + minute/60
+        net_out_stats.append([time,point['Sum']])
+
+        net_out_stats = sorted(net_out_stats, key=itemgetter(0))
+
+    return render_template("workers/view.html",title="Instance Info",
+                           instance=instance,
+                           cpu_stats=cpu_stats,
+                           net_in_stats=net_in_stats,
+                           net_out_stats=net_out_stats)
+
+
+@app.route('/workers/delete/<id>', methods=['POST'])
+def worker_destroy(id):
+
+    ec2 = boto3.resource('ec2')
+    ec2.instances.filter(InstanceIds=[id]).terminate()
 
     return redirect(url_for('worker_list'))

@@ -34,6 +34,10 @@ def background_monitor():
 
         # get current policy variables
         pv = PolicyVars()
+        print("high thresh: " + str(pv.high_cpu_threshold))
+        print("low thresh:  " + str(pv.low_cpu_threshold))
+        print("divisor:     " + str(pv.scaling_multiplier))
+        print("multiplier:  " + str(pv.scaling_divisor))
 
         cpu_utilizations = []
         print('worker instances: ')

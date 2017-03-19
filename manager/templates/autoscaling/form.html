@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+    {%  if error_msg %}
+        <div>
+            <b>{{ error_msg }}</b>
+        </div>
+    {%  endif %}
+    <form method="post" action={{ url_for("set_autoscaling_policy") }}>
+        <div>
+            <label>CPU threshold to grow pool (default: 40):</label>
+            <input type="text" name="expand_cpu_threshold" value="{{ expand_cpu_threshold }}">
+        </div>
+        <div>
+            <label>CPU threshold to shrink pool (default: 20):</label>
+            <input type="text" name="shrink_cpu_threshold" value="{{ shrink_cpu_threshold }}">
+        </div>
+        <div>
+            <label>Ratio to grow pool by (e.g. a ratio of 2 doubles the number of workers) (default: 0):</label>
+            <input type="text" name="expand_ratio" value="{{ expand_ratio }}">
+        </div>
+        <div>
+            <label>Ratio to shrink pool by (e.g. a ratio of 4 shuts down 75% of the current workers) (default: 0) :</label>
+            <input type="text" name="shrink_ratio" value="{{ shrink_ratio }}">
+        </div>
+        <div>
+            <input type="submit" name="submit" value="Submit">
+        </div>
+    </form>
+
+    <form action="{{ url_for("index") }}">
+            <input type="submit" value="Back"/>
+    </form>
+
+{% endblock %}

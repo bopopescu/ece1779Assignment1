@@ -9,6 +9,10 @@
           method="post">
           <input type="submit" value="Shrink Worker Pool">
     </form>
+    <form action="{{ url_for('worker_list') }}"
+          method="get">
+          <input type="submit" value="Refresh">
+    </form>
 
     <table>
     <thead>
@@ -23,30 +27,14 @@
             <td>{{ instance_health }}</td>
             <td>{{ instance_cpu_utilization }}</td>
             <td>
-                <form action="{{ url_for('ec2_view', id=instance.id)}}"
+                <form action="{{ url_for('worker_view', id=instance.id)}}"
                       method="get">
                     <input type="submit" value="Details">
                 </form>
             </td>
 
-             <td>
-                <form action="{{ url_for('ec2_start', id=instance.id) }}"
-                      method="post"
-                      onsubmit='return confirm("Start instance {{ instance.id }}?")'>
-                    <input type="submit" value="Start">
-                </form>
-            </td>
-
             <td>
-                <form action="{{ url_for('ec2_stop', id=instance.id) }}"
-                      method="post"
-                      onsubmit='return confirm("Stop instance {{ instance.id }}?")'>
-                    <input type="submit" value="Stop">
-                </form>
-            </td>
-
-            <td>
-                <form action="{{ url_for('ec2_destroy', id=instance.id) }}"
+                <form action="{{ url_for('worker_destroy', id=instance.id) }}"
                       method="post"
                       onsubmit='return confirm("Destroy instance {{ instance.id }}?")'>
                     <input type="submit" value="Destroy">

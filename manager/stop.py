@@ -11,14 +11,8 @@ def stop():
     elb = boto3.client('elb')
 
     elb.delete_load_balancer(LoadBalancerName=loadbalancer.elb_name)
-    all_ec2_instances = ec2.instances.all()
+    all_ec2_instances = loadbalancer.get_all_instances()
     for instance in all_ec2_instances:
-        if instance.tags is not None:
-            for tag in instance.tags:
-                if tag['Key'] == 'Role' \
-                        and tag['Value'] == 'worker' \
-                        and instance.state.get('Name') == 'running':
-                    instance.terminate()
-                    break
+        instance.terminate()
 
     return redirect(url_for('index'))
