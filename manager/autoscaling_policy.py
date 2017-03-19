@@ -53,9 +53,9 @@ def check_errors(high, low, mult, div):
         errors.append("High CPU threshold must be larger than low CPU threshold")
     if low < 0:
         errors.append("High CPU threshold cannot be less than 0")
-    if mult < 2:
+    if mult < 0:
         errors.append("Scaling multiplier must be 2 or larger")
-    if div < 2:
+    if div < 0:
         errors.append("Scaling divisor must be 2 or larger")
 
     return errors
