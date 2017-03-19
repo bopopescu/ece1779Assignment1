@@ -15,6 +15,8 @@ class PolicyVars(object):
             PolicyVars.__instance.scaling_divisor = 2
         return PolicyVars.__instance
 
+global pv
+pv = PolicyVars()
 
 def background_monitor():
     ec2 = boto3.resource('ec2')
@@ -31,9 +33,6 @@ def background_monitor():
 
         # get all worker instances registered to the load balancer
         instances = loadbalancer.get_all_instances()
-
-        # get current policy variables
-        pv = PolicyVars()
 
         cpu_utilizations = []
         print('worker instances: ')
