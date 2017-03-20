@@ -73,7 +73,10 @@ def background_monitor():
             elif max_cpu < pv.low_cpu_threshold:
                 quiet_workers += 1
 
-        average_utilization = statistics.mean(cpu_utilizations)
+        if not cpu_utilizations:
+            average_utilization = 0
+        else:
+            average_utilization = statistics.mean(cpu_utilizations)
 
         print('\n')
         print('running workers:        ' + str(running_workers))
