@@ -9,7 +9,7 @@ from operator import itemgetter
 from manager import loadbalancer, db
 
 ami_id = 'ami-5b48fc4d'
-instance_type = 't2.micro'
+instance_type = 't2.small'
 key_name = 'firstAmazonEC2key'
 security_group = ['sg-5a25d025', ]
 
