@@ -13,8 +13,8 @@ class PolicyVars(object):
             # default values. 0 means just grow/shrink by one instance
             PolicyVars.__instance.high_cpu_threshold = 40
             PolicyVars.__instance.low_cpu_threshold = 20
-            PolicyVars.__instance.scaling_multiplier = 0
-            PolicyVars.__instance.scaling_divisor = 0
+            PolicyVars.__instance.scaling_multiplier = 1
+            PolicyVars.__instance.scaling_divisor = 1
         return PolicyVars.__instance
 
 
@@ -94,7 +94,7 @@ def background_monitor():
 
         if average_utilization > pv.high_cpu_threshold:
             number_to_grow = 0
-            if pv.scaling_multiplier == 0:
+            if pv.scaling_multiplier == 1:
                 number_to_grow = 1
             else:
                 number_to_grow = running_workers * pv.scaling_multiplier
@@ -105,7 +105,7 @@ def background_monitor():
                 print('only one worker, not shrinking')
             else:
                 number_to_shrink = 0
-                if pv.scaling_divisor == 0:
+                if pv.scaling_divisor == 1:
                     number_to_shrink = 1
                 else:
                     number_to_shrink = \
@@ -115,5 +115,5 @@ def background_monitor():
                 workers.shrink_pool(number_to_shrink)
 
         print('finished monitor cycle\n')
-        time.sleep(10)
+        time.sleep(60)
     return
